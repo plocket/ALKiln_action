@@ -40,6 +40,13 @@ Format:
 -->
 <!-- ## [Unreleased] -->
 
+## [2.7.0-remove-peer-deps.1] - 2021-12-07
+### Added
+- `cucumber` as a plain dependency
+
+### Removed
+- Peer dependencies and dev dependencies. Now `cucumber` is just a dependency. See https://github.com/SuffolkLITLab/ALKiln/issues/396 for discussion.
+
 ## [2.6.0] - 2021-08-07
 ### Added
 - 'today' and 'today - 1' for setting dates
