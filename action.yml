@@ -4,8 +4,6 @@ description: "Try to get this composite action to run in a private repo"
 runs:
   using: "composite"
 
-  env:
-    BRANCH_PATH: ${{ github.ref }}
   #  BASE_URL: ${{ secrets.SERVER_URL }}
   #  PLAYGROUND_EMAIL: ${{ secrets.PLAYGROUND_EMAIL }}
   #  PLAYGROUND_PASSWORD: ${{ secrets.PLAYGROUND_PASSWORD }}
@@ -13,11 +11,8 @@ runs:
   #  EXTRA_LANGUAGES: ${{ secrets.EXTRA_LANGUAGES }}
 
   steps:
+    - name: env vars
+      env:
+        BRANCH_PATH: ${{ github.ref }}
     - run: echo "$BRANCH_PATH"
-      shell: bash
-    - run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "Repo address is $REPO_URL"
-      shell: bash
-    - run: echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
       shell: bash
