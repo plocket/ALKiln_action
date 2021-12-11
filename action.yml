@@ -40,7 +40,8 @@ runs:
       shell: bash
     - run: |
         npm install
+        npm run setup
+        npm run takedown
       shell: bash
 
-        # npm run setup
         # npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}
