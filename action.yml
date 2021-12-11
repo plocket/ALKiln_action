@@ -1,8 +1,6 @@
 name: "Composite action attempt 1"
 description: "Try to get this composite action to run in a private repo"
 
-inputs:
-
 runs:
   using: "composite"
 
