@@ -21,7 +21,3 @@ runs:
       shell: bash
     - run: echo "$BRANCH_PATH"
       shell: bash
-    - run: echo "ID=${{ secrets.PLAYGROUND_ID }}" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "$ID"
-      shell: bash
