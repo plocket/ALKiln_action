@@ -3,5 +3,7 @@ description: "Try to get this composite action to run in a private repo"
 runs:
   using: "composite"
   steps:
-    - run: echo "testing composite action"
+    - run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+      shell: bash
+    - run: echo "Repo address is $REPO_URL"
       shell: bash
