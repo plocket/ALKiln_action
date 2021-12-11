@@ -39,12 +39,8 @@ runs:
     - run: echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
       shell: bash
     - run: |
-        FILE=./package.json
-        if test -f "$FILE"
-        then
-          echo "$FILE exists. $(<./package.json)"
-        else
-          echo "File does not exist"
-        fi
+        npm install
       shell: bash
 
+        # npm run setup
+        # npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}
