@@ -3,26 +3,30 @@ description: "Try to get this composite action to run in a private repo"
 
 inputs:
   SERVER_URL:
-    description: 'The url of your docassemble server'
+    description: 'The url of your docassemble server. This should be in your github SECRETS or the SECRETS of your org.'
+    required: true
+  PLAYGROUND_EMAIL:
+    description: 'The email of your docassemble testing account. This should be in your github SECRETS or the SECRETS of your org.'
+    required: true
+  PLAYGROUND_PASSWORD:
+    description: 'The password of your docassemble testing account. This should be in your github SECRETS or the SECRETS of your org.'
+    required: true
+  PLAYGROUND_ID:
+    description: 'The id of your docassemble testing account. This should be in your github SECRETS or the SECRETS of your org.'
+    required: true
+  EXTRA_LANGUAGES:
+    description: 'Other languages you want to test. This should be in your github SECRETS or the SECRETS of your org.'
     required: true
 
 runs:
   using: "composite"
 
-  #  BASE_URL: ${{ secrets.SERVER_URL }}
-  #  PLAYGROUND_EMAIL: ${{ secrets.PLAYGROUND_EMAIL }}
-  #  PLAYGROUND_PASSWORD: ${{ secrets.PLAYGROUND_PASSWORD }}
-  #  PLAYGROUND_ID: ${{ secrets.PLAYGROUND_ID }}
-  #  EXTRA_LANGUAGES: ${{ secrets.EXTRA_LANGUAGES }}
-
   steps:
-    - run: echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "$BRANCH_PATH"
-      shell: bash
     - run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
       shell: bash
-    - run: echo "Repo address is $REPO_URL"
+    - run: echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
       shell: bash
-    - run: echo "Server url is ${{ inputs.SERVER_URL }}"
+    - run: echo "BASE_URL=${{ inputs.SERVER_URL}}" >> $GITHUB_ENV
+      shell: bash
+    - run: echo "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
       shell: bash
