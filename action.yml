@@ -24,5 +24,5 @@ runs:
       shell: bash
     - run: echo "Repo address is $REPO_URL"
       shell: bash
-    - run: echo "Server url is $INPUT_SERVER_URL"
+    - run: echo "Server url is ${{ inputs.SERVER_URL }}"
       shell: bash
