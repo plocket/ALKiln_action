@@ -41,7 +41,8 @@ runs:
     - name: Check for file
       run: >
         FILE=./package.json
-        if test -f "$FILE"; then
+        if test -f "$FILE"
+        then
           echo "$FILE exists."
         else
           echo "File does not exist"
