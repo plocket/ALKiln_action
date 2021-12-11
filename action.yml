@@ -16,7 +16,7 @@ runs:
       env:
         BRANCH_PATH: ${{ github.ref }}
       shell: bash
-      run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
-      run: echo "Repo address is $REPO_URL"
+      #run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+      #run: echo "Repo address is $REPO_URL"
       #run: echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
       run: echo "$BRANCH_PATH"
