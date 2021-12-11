@@ -20,7 +20,7 @@ inputs:
 
 runs:
   using: "composite"
-
+  using: "node12"
   steps:
     - run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
       shell: bash
@@ -28,5 +28,5 @@ runs:
       shell: bash
     - run: echo "BASE_URL=${{ inputs.SERVER_URL}}" >> $GITHUB_ENV
       shell: bash
-    - run: echo "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
+    - run: echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
       shell: bash
