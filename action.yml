@@ -13,6 +13,7 @@ runs:
   steps:
     - name: env vars
       shell: bash
+      run: echo "env var test"
       env:
         BRANCH_PATH: ${{ github.ref }}
     - run: echo "$BRANCH_PATH"
