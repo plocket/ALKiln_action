@@ -42,7 +42,7 @@ runs:
         FILE=./package.json
         if test -f "$FILE"
         then
-          echo "$FILE exists."
+          echo "$FILE exists. $(<./package.json)"
         else
           echo "File does not exist"
         fi
