@@ -35,6 +35,7 @@ runs:
       shell: bash
     - run: echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
       if: ${{ inputs.EXTRA_LANGUAGES != '' }}
+      shell: bash
     - run: echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
       shell: bash
     - name: Check for file
