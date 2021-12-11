@@ -1,0 +1,6 @@
+name: Composite action attempt 1
+description: Try to get this composite action to run in a private repo
+runs:
+  using: "composite"
+  steps:
+    run: echo "testing composite action"
