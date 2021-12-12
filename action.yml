@@ -28,7 +28,7 @@ runs:
         node-version: "12"
     - run: npm install
       shell: bash
-    - name: Run tests with ALKiln
+    - name: "ALKiln: Run tests"
       env:
         REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
         BRANCH_PATH: ${{ github.ref }}
@@ -42,3 +42,10 @@ runs:
         echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL"
         npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
       shell: bash
+    - name: "ALKiln: Upload report"
+      uses: actions/upload-artifact@v2
+      # They will upload even if a previous step has failed
+      if: ${{ always() }}
+      with:
+        name: report
+        path: ./**/*_report_*
