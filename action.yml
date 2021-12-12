@@ -22,9 +22,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    #- run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+    #  shell: bash
     - name: Run ALKiln tests
       env:
-        REPO_URL: "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+        REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
         BRANCH_PATH: ${{ github.ref }}
         BASE_URL: ${{ inputs.SERVER_URL }}
         PLAYGROUND_EMAIL: ${{ inputs.PLAYGROUND_EMAIL }}
