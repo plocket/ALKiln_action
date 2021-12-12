@@ -23,23 +23,32 @@ runs:
   using: "composite"
   steps:
     - name: Run ALKiln tests
+      env:
+        REPO_URL: "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+        BRANCH_PATH: ${{ github.ref }}
+        BASE_URL: ${{ inputs.SERVER_URL }}
+        PLAYGROUND_EMAIL: ${{ inputs.PLAYGROUND_EMAIL }}
+        PLAYGROUND_PASSWORD: ${{ inputs.PLAYGROUND_PASSWORD }}
+        PLAYGROUND_ID: ${{ inputs.PLAYGROUND_ID }}
+        EXTRA_LANGUAGES: ${{ inputs.EXTRA_LANGUAGES }}
+
       run: |
-        echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
-        echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
-        echo "BASE_URL=${{ inputs.SERVER_URL }}" >> $GITHUB_ENV
-        echo "PLAYGROUND_EMAIL=${{ inputs.PLAYGROUND_EMAIL }}" >> $GITHUB_ENV
-        echo "PLAYGROUND_PASSWORD=${{ inputs.PLAYGROUND_PASSWORD }}" >> $GITHUB_ENV
-        echo "PLAYGROUND_ID=${{ inputs.PLAYGROUND_ID }}" >> $GITHUB_ENV
-        if ${{ inputs.EXTRA_LANGUAGES != '' }}
-        then
-          echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
-        fi
         echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
         npm install
         npm run setup
         npm run takedown
       shell: bash
 
+        # echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+        # echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
+        # echo "BASE_URL=${{ inputs.SERVER_URL }}" >> $GITHUB_ENV
+        # echo "PLAYGROUND_EMAIL=${{ inputs.PLAYGROUND_EMAIL }}" >> $GITHUB_ENV
+        # echo "PLAYGROUND_PASSWORD=${{ inputs.PLAYGROUND_PASSWORD }}" >> $GITHUB_ENV
+        # echo "PLAYGROUND_ID=${{ inputs.PLAYGROUND_ID }}" >> $GITHUB_ENV
+        # if ${{ inputs.EXTRA_LANGUAGES != '' }}
+        # then
+        #   echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
+        # fi
     #- run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
     #  shell: bash
     #- run: echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
