@@ -17,31 +17,50 @@ inputs:
   EXTRA_LANGUAGES:
     description: 'Other languages you want to test. This should be in your github SECRETS or the SECRETS of your org.'
     required: true
+    # TODO: Check if we really need the `if` for extra languages
 
 runs:
   using: "composite"
   steps:
-    - run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "BASE_URL=${{ inputs.SERVER_URL }}" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "PLAYGROUND_EMAIL=${{ inputs.PLAYGROUND_EMAIL }}" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "PLAYGROUND_PASSWORD=${{ inputs.PLAYGROUND_PASSWORD }}" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "PLAYGROUND_ID=${{ inputs.PLAYGROUND_ID }}" >> $GITHUB_ENV
-      shell: bash
-    - run: echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
-      if: ${{ inputs.EXTRA_LANGUAGES != '' }}
-      shell: bash
-    - run: echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
-      shell: bash
-    - run: |
+    - name: Run ALKiln tests
+      run: |
+        echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+        echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
+        echo "BASE_URL=${{ inputs.SERVER_URL }}" >> $GITHUB_ENV
+        echo "PLAYGROUND_EMAIL=${{ inputs.PLAYGROUND_EMAIL }}" >> $GITHUB_ENV
+        echo "PLAYGROUND_PASSWORD=${{ inputs.PLAYGROUND_PASSWORD }}" >> $GITHUB_ENV
+        echo "PLAYGROUND_ID=${{ inputs.PLAYGROUND_ID }}" >> $GITHUB_ENV
+        if ${{ inputs.EXTRA_LANGUAGES != '' }}
+        then
+          echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
+        fi
+        echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
         npm install
         npm run setup
         npm run takedown
       shell: bash
+
+    #- run: echo "REPO_URL=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY" >> $GITHUB_ENV
+    #  shell: bash
+    #- run: echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
+    #  shell: bash
+    #- run: echo "BASE_URL=${{ inputs.SERVER_URL }}" >> $GITHUB_ENV
+    #  shell: bash
+    #- run: echo "PLAYGROUND_EMAIL=${{ inputs.PLAYGROUND_EMAIL }}" >> $GITHUB_ENV
+    #  shell: bash
+    #- run: echo "PLAYGROUND_PASSWORD=${{ inputs.PLAYGROUND_PASSWORD }}" >> $GITHUB_ENV
+    #  shell: bash
+    #- run: echo "PLAYGROUND_ID=${{ inputs.PLAYGROUND_ID }}" >> $GITHUB_ENV
+    #  shell: bash
+    #- run: echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
+    #  if: ${{ inputs.EXTRA_LANGUAGES != '' }}
+    #  shell: bash
+    #- run: echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL\nPassword is ${{ inputs.PLAYGROUND_PASSWORD}}"
+    #  shell: bash
+    #- run: |
+    #    npm install
+    #    npm run setup
+    #    npm run takedown
+    #  shell: bash
 
         # npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}
