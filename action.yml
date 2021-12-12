@@ -28,6 +28,8 @@ runs:
         node-version: "12"
     - run: npm install
       shell: bash
+
+    # Run all the node commands. `env:` vars only exist inside the specific `run:`
     - name: "ALKiln: Run tests"
       env:
         REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
@@ -37,15 +39,33 @@ runs:
         PLAYGROUND_PASSWORD: ${{ inputs.PLAYGROUND_PASSWORD }}
         PLAYGROUND_ID: ${{ inputs.PLAYGROUND_ID }}
         EXTRA_LANGUAGES: ${{ inputs.EXTRA_LANGUAGES }}
-
       run: |
-        echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL"
+        echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\n"
         npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
       shell: bash
-    - name: "ALKiln: Upload report"
+
+    # Artifacts users can download on the Actions summary page
+    - name: "ALKiln: Upload errors to action summary artifacts"
+      if: ${{ failure() }}
       uses: actions/upload-artifact@v2
-      # They will upload even if a previous step has failed
+      with:
+        name: errors
+        path: ./**/error*.jpg
+    - name: "ALKiln: Upload screenshots to action summary artifacts"
       if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: screenshots
+        path: ./**/screenshot*.jpg
+    - name: "ALKiln: Upload downloaded files to action summary artifacts"
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: downloads
+        path: ./**/downloads_*
+    - name: "ALKiln: Upload report to action summary artifacts"
+      if: ${{ always() }}
+      uses: actions/upload-artifact@v2
       with:
         name: report
         path: ./**/*_report_*
