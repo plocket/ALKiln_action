@@ -28,7 +28,7 @@ runs:
         node-version: "12"
     - run: npm install
       shell: bash
-    - name: ALKiln create da Project for tests
+    - name: Run tests with ALKiln
       env:
         REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
         BRANCH_PATH: ${{ github.ref }}
@@ -40,5 +40,5 @@ runs:
 
       run: |
         echo -e "Repo is $REPO_URL\nBranch is $BRANCH_PATH\nServer is $BASE_URL"
-        npm run setup && npm run test; npm run takedown
+        npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
       shell: bash
