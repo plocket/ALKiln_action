@@ -1,32 +1,38 @@
-name: "Composite action attempt 1"
-description: "Try to get this composite action to run in a private repo"
+name: "ALKiln: Automated docassemble tests"
+description: "Automatically test any docassemble interview in a any branch on your GitHub repository whenever you commit or push. See https://suffolklitlab.org/docassemble-AssemblyLine-documentation/docs/automated_integrated_testing."
 
 inputs:
   SERVER_URL:
-    description: 'The url of your docassemble server. This should be in your github SECRETS or the SECRETS of your org.'
+    description: 'The url of your docassemble server. This should be in your GitHub SECRETS or the SECRETS of your org.'
     required: true
   PLAYGROUND_EMAIL:
-    description: 'The email of your docassemble testing account. This should be in your github SECRETS or the SECRETS of your org.'
+    description: 'The email of your docassemble testing account. This should be in your GitHub SECRETS or the SECRETS of your org.'
     required: true
   PLAYGROUND_PASSWORD:
-    description: 'The password of your docassemble testing account. This should be in your github SECRETS or the SECRETS of your org.'
+    description: 'The password of your docassemble testing account. This should be in your GitHub SECRETS or the SECRETS of your org.'
     required: true
   PLAYGROUND_ID:
-    description: 'The id of your docassemble testing account. This should be in your github SECRETS or the SECRETS of your org.'
+    description: 'The id of your docassemble testing account. This should be in your GitHub SECRETS or the SECRETS of your org.'
     required: true
   EXTRA_LANGUAGES:
-    description: 'Other languages you want to test. This should be in your github SECRETS or the SECRETS of your org.'
+    description: 'Other languages you want to test. This should be in your GitHub SECRETS or the SECRETS of your org.'
     required: true
     default: ''
-    # TODO: Check if we really need the `if` for extra languages
+    # TODO: Check if we really need the `if` for extra languages that we used to have
 
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-node@v1
+    - name: "ALKiln: Install node package manager"
+      uses: actions/setup-node@v1
       with:
         node-version: "12"
     - run: npm install
+      shell: bash
+
+    - run: |
+        echo "${{ inputs.EXTRA_LANGUAGES }}"
+        echo "${{ github.event.inputs.extra_languages }}"
       shell: bash
 
     # Run all the node commands. `env:` vars only exist inside the specific `run:`
@@ -39,8 +45,10 @@ runs:
         PLAYGROUND_PASSWORD: ${{ inputs.PLAYGROUND_PASSWORD }}
         PLAYGROUND_ID: ${{ inputs.PLAYGROUND_ID }}
         EXTRA_LANGUAGES: ${{ inputs.EXTRA_LANGUAGES }}
+      # The second line doesn't print to GitHub, unfortunately. It may be
+      # worth splitting up the commands into their own `runs`, despite the duplication
       run: |
-        echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\n"
+        echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nServer url is secret\n"
         npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
       shell: bash
 
