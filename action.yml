@@ -30,9 +30,19 @@ runs:
     - run: npm install
       shell: bash
 
+    # If extra languages were set manually, override the repository
+    # EXTRA_LANGUAGES secret with the manually set values
+    - run: echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
+      if: ${{ github.event.inputs.extra_languages != '' }}
+      shell: bash
+    # If NO extra languages were set manually, use the repo EXTRA_LANGUAGES secret
+    - run: echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
+      if: ${{ github.event.inputs.extra_languages == '' }}
+      shell: bash
     - run: |
         echo "${{ inputs.EXTRA_LANGUAGES }}"
         echo "${{ github.event.inputs.extra_languages }}"
+        echo "Actual: $EXTRA_LANGUAGES"
       shell: bash
 
     # Run all the node commands. `env:` vars only exist inside the specific `run:`
@@ -44,15 +54,15 @@ runs:
         PLAYGROUND_EMAIL: ${{ inputs.PLAYGROUND_EMAIL }}
         PLAYGROUND_PASSWORD: ${{ inputs.PLAYGROUND_PASSWORD }}
         PLAYGROUND_ID: ${{ inputs.PLAYGROUND_ID }}
-        EXTRA_LANGUAGES: ${{ inputs.EXTRA_LANGUAGES }}
+        EXTRA_LANGUAGES: "$EXTRA_LANGUAGES"
       # The second line doesn't print to GitHub, unfortunately. It may be
       # worth splitting up the commands into their own `runs`, despite the duplication
       run: |
-        echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nServer url is secret\n"
+        echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
         npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
       shell: bash
 
-    # Artifacts users can download on the Actions summary page
+    # Upload artifacts users can download on the Actions summary page
     - name: "ALKiln: Upload errors to action summary artifacts"
       if: ${{ failure() }}
       uses: actions/upload-artifact@v2
