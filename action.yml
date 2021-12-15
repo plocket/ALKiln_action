@@ -35,27 +35,27 @@ runs:
         echo "secret: ${{ inputs.EXTRA_LANGUAGES }}"
         echo "manual: ${{ github.event.inputs.extra_languages }}"
       shell: bash
-    # If extra languages were set manually, override the repository
-    # EXTRA_LANGUAGES secret with the manually set values
-    - run: echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
-      if: ${{ github.event.inputs.extra_languages != '' }}
-      shell: bash
-    # If NO extra languages were set manually, use the repo EXTRA_LANGUAGES secret
-    - run: echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
-      if: ${{ github.event.inputs.extra_languages == '' }}
-      shell: bash
-    - run: |
-        echo "${{ github.event.inputs.extra_languages != '' }}"
-        if "${{ github.event.inputs.extra_languages != '' }}"
-        then
-          echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
-        else
-          echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
-        fi
-        echo "secret: ${{ inputs.EXTRA_LANGUAGES }}"
-        echo "manual: ${{ github.event.inputs.extra_languages }}"
-        echo "Actual: $EXTRA_LANGUAGES"
-      shell: bash
+    # # If extra languages were set manually, override the repository
+    # # EXTRA_LANGUAGES secret with the manually set values
+    # - run: echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
+    #   if: ${{ github.event.inputs.extra_languages != '' }}
+    #   shell: bash
+    # # If NO extra languages were set manually, use the repo EXTRA_LANGUAGES secret
+    # - run: echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
+    #   if: ${{ github.event.inputs.extra_languages == '' }}
+    #   shell: bash
+    # - run: |
+    #     echo "${{ github.event.inputs.extra_languages != '' }}"
+    #     if "${{ github.event.inputs.extra_languages != '' }}"
+    #     then
+    #       echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
+    #     else
+    #       echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
+    #     fi
+    #     echo "secret: ${{ inputs.EXTRA_LANGUAGES }}"
+    #     echo "manual: ${{ github.event.inputs.extra_languages }}"
+    #     echo "Actual: $EXTRA_LANGUAGES"
+    #   shell: bash
 
     # Run all the node commands. `env:` vars only exist inside the specific `run:`
     - name: "ALKiln: Run tests"
@@ -66,7 +66,7 @@ runs:
         PLAYGROUND_EMAIL: "${{ inputs.PLAYGROUND_EMAIL }}"
         PLAYGROUND_PASSWORD: "${{ inputs.PLAYGROUND_PASSWORD }}"
         PLAYGROUND_ID: "${{ inputs.PLAYGROUND_ID }}"
-        EXTRA_LANGUAGES: "${{ inputs.EXTRA_LANGUAGES }}"
+        # EXTRA_LANGUAGES_INPUT: "${{ inputs.EXTRA_LANGUAGES }}"
       # If extra languages were set manually, override the repository
       # EXTRA_LANGUAGES secret with the manually set values
       # Also, the npm commands one-liner doesn't print to GitHub, unfortunately. It may be
@@ -75,6 +75,8 @@ runs:
         if "${{ github.event.inputs.extra_languages != '' }}"
         then
           echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
+        else
+          echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
         fi
         echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
         npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
