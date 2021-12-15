@@ -30,6 +30,11 @@ runs:
     - run: npm install
       shell: bash
 
+    - name: test langs
+      run: |
+        echo "secret: ${{ inputs.EXTRA_LANGUAGES }}"
+        echo "manual: ${{ github.event.inputs.extra_languages }}"
+      shell: bash
     # If extra languages were set manually, override the repository
     # EXTRA_LANGUAGES secret with the manually set values
     - run: echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
@@ -40,8 +45,15 @@ runs:
       if: ${{ github.event.inputs.extra_languages == '' }}
       shell: bash
     - run: |
-        echo "${{ inputs.EXTRA_LANGUAGES }}"
-        echo "${{ github.event.inputs.extra_languages }}"
+        echo "${{ github.event.inputs.extra_languages != '' }}"
+        if "${{ github.event.inputs.extra_languages != '' }}"
+        then
+          echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
+        else
+          echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
+        fi
+        echo "secret: ${{ inputs.EXTRA_LANGUAGES }}"
+        echo "manual: ${{ github.event.inputs.extra_languages }}"
         echo "Actual: $EXTRA_LANGUAGES"
       shell: bash
 
@@ -49,15 +61,21 @@ runs:
     - name: "ALKiln: Run tests"
       env:
         REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
-        BRANCH_PATH: ${{ github.ref }}
-        BASE_URL: ${{ inputs.SERVER_URL }}
-        PLAYGROUND_EMAIL: ${{ inputs.PLAYGROUND_EMAIL }}
-        PLAYGROUND_PASSWORD: ${{ inputs.PLAYGROUND_PASSWORD }}
-        PLAYGROUND_ID: ${{ inputs.PLAYGROUND_ID }}
-        EXTRA_LANGUAGES: "$EXTRA_LANGUAGES"
-      # The second line doesn't print to GitHub, unfortunately. It may be
+        BRANCH_PATH: "${{ github.ref }}"
+        BASE_URL: "${{ inputs.SERVER_URL }}"
+        PLAYGROUND_EMAIL: "${{ inputs.PLAYGROUND_EMAIL }}"
+        PLAYGROUND_PASSWORD: "${{ inputs.PLAYGROUND_PASSWORD }}"
+        PLAYGROUND_ID: "${{ inputs.PLAYGROUND_ID }}"
+        EXTRA_LANGUAGES: "${{ inputs.EXTRA_LANGUAGES }}"
+      # If extra languages were set manually, override the repository
+      # EXTRA_LANGUAGES secret with the manually set values
+      # Also, the npm commands one-liner doesn't print to GitHub, unfortunately. It may be
       # worth splitting up the commands into their own `runs`, despite the duplication
       run: |
+        if "${{ github.event.inputs.extra_languages != '' }}"
+        then
+          echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
+        fi
         echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
         npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
       shell: bash
