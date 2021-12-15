@@ -30,11 +30,11 @@ runs:
     - run: npm install
       shell: bash
 
-    - name: test langs
-      run: |
-        echo "secret: ${{ inputs.EXTRA_LANGUAGES }}"
-        echo "manual: ${{ github.event.inputs.extra_languages }}"
-      shell: bash
+    # - name: test langs
+    #   run: |
+    #     echo "secret: ${{ inputs.EXTRA_LANGUAGES }}"
+    #     echo "manual: ${{ github.event.inputs.extra_languages }}"
+    #   shell: bash
     # # If extra languages were set manually, override the repository
     # # EXTRA_LANGUAGES secret with the manually set values
     # - run: echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
@@ -72,10 +72,11 @@ runs:
       # Also, the npm commands one-liner doesn't print to GitHub, unfortunately. It may be
       # worth splitting up the commands into their own `runs`, despite the duplication
       run: |
-        if "${{ github.event.inputs.extra_languages != '' }}"
-        then
+        if [${{ github.event.inputs.extra_languages != '' }}]; then
+          echo "Manually set languages: ${{ github.event.inputs.extra_languages != '' }}"
           echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
         else
+          echo "Use EXTRA_LANGUAGES secret: ${{ github.event.inputs.extra_languages != '' }}"
           echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
         fi
         echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
