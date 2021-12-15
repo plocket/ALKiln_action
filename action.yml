@@ -72,39 +72,39 @@ runs:
       # Also, the npm commands one-liner doesn't print to GitHub, unfortunately. It may be
       # worth splitting up the commands into their own `runs`, despite the duplication
       run: |
-        if [${{ github.event.inputs.extra_languages != '' }}]; then
-          echo "Manually set languages: ${{ github.event.inputs.extra_languages != '' }}"
+        if ${{ github.event.inputs.extra_languages != '' }}
+        then
+          echo "Manually set languages: ${{ github.event.inputs.extra_languages }}"
           echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
         else
-          echo "Use EXTRA_LANGUAGES secret: ${{ github.event.inputs.extra_languages != '' }}"
+          echo "Use EXTRA_LANGUAGES secret: ${{ inputs.extra_languages }}"
           echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
         fi
         echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
-        npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
       shell: bash
-
-    # Upload artifacts users can download on the Actions summary page
-    - name: "ALKiln: Upload errors to action summary artifacts"
-      if: ${{ failure() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: errors
-        path: ./**/error*.jpg
-    - name: "ALKiln: Upload screenshots to action summary artifacts"
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: screenshots
-        path: ./**/screenshot*.jpg
-    - name: "ALKiln: Upload downloaded files to action summary artifacts"
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: downloads
-        path: ./**/downloads_*
-    - name: "ALKiln: Upload report to action summary artifacts"
-      if: ${{ always() }}
-      uses: actions/upload-artifact@v2
-      with:
-        name: report
-        path: ./**/*_report_*
+      #npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
+    # # Upload artifacts users can download on the Actions summary page
+    # - name: "ALKiln: Upload errors to action summary artifacts"
+    #   if: ${{ failure() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: errors
+    #     path: ./**/error*.jpg
+    # - name: "ALKiln: Upload screenshots to action summary artifacts"
+    #   if: ${{ always() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: screenshots
+    #     path: ./**/screenshot*.jpg
+    # - name: "ALKiln: Upload downloaded files to action summary artifacts"
+    #   if: ${{ always() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: downloads
+    #     path: ./**/downloads_*
+    # - name: "ALKiln: Upload report to action summary artifacts"
+    #   if: ${{ always() }}
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: report
+    #     path: ./**/*_report_*
