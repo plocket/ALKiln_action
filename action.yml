@@ -23,12 +23,12 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: "ALKiln: Install node package manager"
-      uses: actions/setup-node@v1
-      with:
-        node-version: "12"
-    - run: npm install
-      shell: bash
+    # - name: "ALKiln: Install node package manager"
+    #   uses: actions/setup-node@v1
+    #   with:
+    #     node-version: "12"
+    # - run: npm install
+    #   shell: bash
 
     # - name: test langs
     #   run: |
@@ -75,14 +75,18 @@ runs:
         if ${{ github.event.inputs.extra_languages != '' }}
         then
           echo "Manually set languages: ${{ github.event.inputs.extra_languages }}"
-          echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
+          EXTRA_LANGUAGES="${{ github.event.inputs.extra_languages }}"
+          echo "EXTRA_LANGUAGES=${EXTRA_LANGUAGES}" >> $GITHUB_ENV
         else
-          echo "Use EXTRA_LANGUAGES secret: ${{ inputs.extra_languages }}"
-          echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
+          echo "Use EXTRA_LANGUAGES secret: ${{ inputs.EXTRA_LANGUAGES }}"
+          EXTRA_LANGUAGES="${{ inputs.EXTRA_LANGUAGES }}"
+          echo "EXTRA_LANGUAGES=${EXTRA_LANGUAGES}" >> $GITHUB_ENV
         fi
         echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
       shell: bash
       #npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
+    - run: echo -e "\nNext step:\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
+      shell: bash
     # # Upload artifacts users can download on the Actions summary page
     # - name: "ALKiln: Upload errors to action summary artifacts"
     #   if: ${{ failure() }}
