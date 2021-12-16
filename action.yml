@@ -64,17 +64,21 @@ runs:
         if ${{ github.event.inputs.extra_languages != '' }}
         then
           echo "Manually set languages: ${{ github.event.inputs.extra_languages }}"
-          EXTRA_LANGUAGES="${{ github.event.inputs.extra_languages }}"
-          echo "EXTRA_LANGUAGES=${EXTRA_LANGUAGES}" >> $GITHUB_ENV
+          echo "EXTRA_LANGUAGES=${{ github.event.inputs.extra_languages }}" >> $GITHUB_ENV
         else
           echo "Use EXTRA_LANGUAGES secret: ${{ inputs.EXTRA_LANGUAGES }}"
-          EXTRA_LANGUAGES="${{ inputs.EXTRA_LANGUAGES }}"
-          echo "EXTRA_LANGUAGES=${EXTRA_LANGUAGES}" >> $GITHUB_ENV
+          echo "EXTRA_LANGUAGES=${{ inputs.EXTRA_LANGUAGES }}" >> $GITHUB_ENV
         fi
         echo "REPO_URL=${{ github.server_url }}/${{ github.repository }}" >> $GITHUB_ENV
+        echo "BRANCH_PATH=${{ github.ref }}" >> $GITHUB_ENV
+        echo "BASE_URL=${{ inputs.SERVER_URL }}" >> $GITHUB_ENV
+        echo "PLAYGROUND_EMAIL=${{ inputs.PLAYGROUND_EMAIL }}" >> $GITHUB_ENV
+        echo "PLAYGROUND_PASSWORD=${{ inputs.PLAYGROUND_PASSWORD }}" >> $GITHUB_ENV
+        echo "PLAYGROUND_ID=${{ inputs.PLAYGROUND_ID }}" >> $GITHUB_ENV
       shell: bash
 
-    - run: echo -e "\nRepo is $REPO_URL\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
+    - name: "Check env vars"
+      run: echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
       shell: bash
 
     # # Run all the node commands. `env:` vars only exist inside the specific `run:`
