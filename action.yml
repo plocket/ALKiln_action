@@ -57,20 +57,9 @@ runs:
     #     echo "Actual: $EXTRA_LANGUAGES"
     #   shell: bash
 
-    # Run all the node commands. `env:` vars only exist inside the specific `run:`
-    - name: "ALKiln: Run tests"
-      env:
-        REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
-        BRANCH_PATH: "${{ github.ref }}"
-        BASE_URL: "${{ inputs.SERVER_URL }}"
-        PLAYGROUND_EMAIL: "${{ inputs.PLAYGROUND_EMAIL }}"
-        PLAYGROUND_PASSWORD: "${{ inputs.PLAYGROUND_PASSWORD }}"
-        PLAYGROUND_ID: "${{ inputs.PLAYGROUND_ID }}"
-        # EXTRA_LANGUAGES_INPUT: "${{ inputs.EXTRA_LANGUAGES }}"
+    - name: "ALKiln: Set environment variables"
       # If extra languages were set manually, override the repository
       # EXTRA_LANGUAGES secret with the manually set values
-      # Also, the npm commands one-liner doesn't print to GitHub, unfortunately. It may be
-      # worth splitting up the commands into their own `runs`, despite the duplication
       run: |
         if ${{ github.event.inputs.extra_languages != '' }}
         then
@@ -82,11 +71,54 @@ runs:
           EXTRA_LANGUAGES="${{ inputs.EXTRA_LANGUAGES }}"
           echo "EXTRA_LANGUAGES=${EXTRA_LANGUAGES}" >> $GITHUB_ENV
         fi
-        echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
+        REPO_URL="${{ github.server_url }}/${{ github.repository }}"
+        echo "REPO_URL=${REPO_URL}" >> $GITHUB_ENV
+        BRANCH_PATH="${{ github.ref }}"
+        echo "BRANCH_PATH=${BRANCH_PATH}" >> $GITHUB_ENV
+        BASE_URL="${{ inputs.SERVER_URL }}"
+        echo "BASE_URL=${BASE_URL}" >> $GITHUB_ENV
+        PLAYGROUND_EMAIL="${{ inputs.PLAYGROUND_EMAIL }}"
+        echo "PLAYGROUND_EMAIL=${PLAYGROUND_EMAIL}" >> $GITHUB_ENV
+        PLAYGROUND_PASSWORD="${{ inputs.PLAYGROUND_PASSWORD }}"
+        echo "PLAYGROUND_PASSWORD=${PLAYGROUND_PASSWORD}" >> $GITHUB_ENV
+        PLAYGROUND_ID="${{ inputs.PLAYGROUND_ID }}"
+        echo "PLAYGROUND_ID=${PLAYGROUND_ID}" >> $GITHUB_ENV
       shell: bash
-      #npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
-    - run: echo -e "\nNext step:\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
+
+    - run: echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
       shell: bash
+
+    # # Run all the node commands. `env:` vars only exist inside the specific `run:`
+    # - name: "ALKiln: Run tests"
+    #   #env:
+    #   #  REPO_URL: "${{ github.server_url }}/${{ github.repository }}"
+    #   #  BRANCH_PATH: "${{ github.ref }}"
+    #   #  BASE_URL: "${{ inputs.SERVER_URL }}"
+    #   #  PLAYGROUND_EMAIL: "${{ inputs.PLAYGROUND_EMAIL }}"
+    #   #  PLAYGROUND_PASSWORD: "${{ inputs.PLAYGROUND_PASSWORD }}"
+    #   #  PLAYGROUND_ID: "${{ inputs.PLAYGROUND_ID }}"
+    #   #  # EXTRA_LANGUAGES_INPUT: "${{ inputs.EXTRA_LANGUAGES }}"
+    #   # If extra languages were set manually, override the repository
+    #   # EXTRA_LANGUAGES secret with the manually set values
+    #   # Also, the npm commands one-liner doesn't print to GitHub, unfortunately. It may be
+    #   # worth splitting up the commands into their own `runs`, despite the duplication
+    #   run: |
+    #     if ${{ github.event.inputs.extra_languages != '' }}
+    #     then
+    #       echo "Manually set languages: ${{ github.event.inputs.extra_languages }}"
+    #       EXTRA_LANGUAGES="${{ github.event.inputs.extra_languages }}"
+    #       echo "EXTRA_LANGUAGES=${EXTRA_LANGUAGES}" >> $GITHUB_ENV
+    #     else
+    #       echo "Use EXTRA_LANGUAGES secret: ${{ inputs.EXTRA_LANGUAGES }}"
+    #       EXTRA_LANGUAGES="${{ inputs.EXTRA_LANGUAGES }}"
+    #       echo "EXTRA_LANGUAGES=${EXTRA_LANGUAGES}" >> $GITHUB_ENV
+    #     fi
+    #     echo -e "\nRepo is $REPO_URL\nBranch is $BRANCH_PATH\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
+    #   shell: bash
+    #   #npm run setup && npm run test -- ${{ github.event.inputs.tags && format('"--tags" "{0}"', github.event.inputs.tags) }}; npm run takedown
+    # - run: echo -e "\nNext step:\nLanguages to test are $EXTRA_LANGUAGES\nOther information is secret\n"
+    #   shell: bash
+      
     # # Upload artifacts users can download on the Actions summary page
     # - name: "ALKiln: Upload errors to action summary artifacts"
     #   if: ${{ failure() }}
