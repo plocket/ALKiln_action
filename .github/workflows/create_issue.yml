@@ -1,0 +1,20 @@
+name: Create an issue on failure
+
+on:
+  push:
+  workflow_dispatch:
+  
+jobs:
+  create_issue:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Create an issue
+        uses: actions-ecosystem/action-create-issue@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          title: ALKiln tests failed
+          body: |
+            ## Some text
+          labels: |
+            bug
