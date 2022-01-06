@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - run: echo "this should fail"
+      - run: echo "this should fail $NO_VAR"
       - name: If tests failed create an issue
         if: ${{ failure() }}
         uses: actions-ecosystem/action-create-issue@v1
