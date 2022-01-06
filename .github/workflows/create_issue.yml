@@ -9,7 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Create an issue
+      - run: echo "this should fail"
+      - name: If tests failed create an issue
+        if: ${{ failure() }}
         uses: actions-ecosystem/action-create-issue@v1
         with:
           github_token: ${{ secrets.github_token }}
