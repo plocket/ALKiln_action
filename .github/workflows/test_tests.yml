@@ -83,7 +83,7 @@ jobs:
           github_token: ${{ secrets.github_token }}
           title: ALKiln tests failed
           body: |
-            An ALKiln test failed. See the action at ${{ GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID }}.
+            An ALKiln test failed. See the action at ${{ GITHUB_SERVER_URL }}/${{ GITHUB_REPOSITORY }}/actions/runs/${{ GITHUB_RUN_ID }}.
           labels: |
             bug
 
