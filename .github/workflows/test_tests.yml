@@ -75,3 +75,14 @@ jobs:
       - name: Cleanup
         if: ${{ always() }}
         run: npm run takedown
+      - name: If tests failed create an issue
+        if: ${{ failure() }}
+        uses: actions-ecosystem/action-create-issue@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          title: ALKiln tests failed
+          body: |
+            ## Some text
+          labels: |
+            bug
+
